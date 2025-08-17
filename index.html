@@ -1037,12 +1037,13 @@
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhrcGNpenVwcGJ0cWFidXhmemRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4ODU2ODQsImV4cCI6MjA3MDQ2MTY4NH0.ayeWLI7oRhMQAq21aSi0FmeZLePNT3Du03JoxbJZb9k';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
         
-        // Initialize Stripe
+                // Initialize Stripe
         let stripe, elements, cardElement;
         
         async function initializeStripe() {
             try {
-                stripe = Stripe('pk_test_51QdDyoH7U4yNOuujeLBqpAOOdpAhO71oXssTqsXGGKPQ4XkC87VqTqnCKC1ZzJz6ijqOXNNOa64p6VkImc0WoELH00ElPfGxhI');
+                // Use your publishable key for client-side operations
+                stripe = Stripe('pk_live_51QdDyoH7U4yNOuujwCjz4nfBbdngHOW4Axv1bF9hGe5hiRCKWQPIKWQE82Pl3uZiNI3VBQJ6eiQL4uT7C4NHQhqg00j1Itqnd0');
                 elements = stripe.elements();
                 cardElement = elements.create('card', {
                     style: {
