@@ -21,10 +21,10 @@ serve(async (req) => {
   try {
     const { amount, currency, donor_email }: PaymentRequest = await req.json()
 
-        // Get Stripe secret key from environment
-    const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY') || Deno.env.get('STRIPE_RESTRICTED_KEY')
+            // Get Stripe secret key from environment - specifically check for restricted key first
+    const stripeSecretKey = Deno.env.get('STRIPE_RESTRICTED_KEY') || Deno.env.get('STRIPE_SECRET_KEY')
     if (!stripeSecretKey) {
-      console.error('STRIPE_SECRET_KEY or STRIPE_RESTRICTED_KEY not found in environment variables')
+      console.error('STRIPE_RESTRICTED_KEY not found in environment variables')
       return new Response(
         JSON.stringify({ error: 'Payment service configuration error' }),
         { 
@@ -35,13 +35,25 @@ serve(async (req) => {
     }
 
     // Log the key type for debugging (without exposing the actual key)
-    console.log('Using Stripe key type:', stripeSecretKey.substring(0, 7) + '...')
+    console.log('Using Stripe key type:', stripeSecretKey.substring(0, 8) + '...')
 
-    // Validate that we have a secret or restricted key
+    // Validate that we have a restricted key (rk_) or secret key (sk_)
     if (stripeSecretKey.startsWith('pk_')) {
-      console.error('Invalid key type: publishable key provided instead of secret/restricted key')
+      console.error('Invalid key type: publishable key provided instead of restricted/secret key')
       return new Response(
         JSON.stringify({ error: 'Payment service configuration error - invalid key type' }),
+        { 
+          status: 500, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      )
+    }
+
+    // Ensure we have either restricted key or secret key
+    if (!stripeSecretKey.startsWith('rk_') && !stripeSecretKey.startsWith('sk_')) {
+      console.error('Invalid key format: must be restricted key (rk_) or secret key (sk_)')
+      return new Response(
+        JSON.stringify({ error: 'Payment service configuration error - invalid key format' }),
         { 
           status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
