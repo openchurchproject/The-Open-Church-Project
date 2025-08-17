@@ -21,11 +21,11 @@ serve(async (req) => {
   try {
     const { amount, currency, donor_email }: PaymentRequest = await req.json()
 
-                // Get Stripe restricted key from environment variables
+                    // Get Stripe restricted key from environment variables
     const stripeSecretKey = Deno.env.get('STRIPE_RESTRICTED_KEY')
     if (!stripeSecretKey) {
       console.error('STRIPE_RESTRICTED_KEY not found in environment variables')
-      console.log('Available env vars:', Object.keys(Deno.env.toObject()).filter(key => key.includes('STRIPE')))
+      console.log('Available Stripe env vars:', Object.keys(Deno.env.toObject()).filter(key => key.includes('STRIPE')))
       return new Response(
         JSON.stringify({ error: 'Payment service configuration error - restricted key not found' }),
         { 
@@ -36,13 +36,13 @@ serve(async (req) => {
     }
 
     // Log the key type for debugging (without exposing the actual key)
-    console.log('Using Stripe key type:', stripeSecretKey.substring(0, 8) + '...')
+    console.log('Using Stripe key type:', stripeSecretKey.substring(0, 8) + '...', 'Length:', stripeSecretKey.length)
 
-    // Validate that we have a restricted key (rk_)
-    if (stripeSecretKey.startsWith('pk_')) {
-      console.error('Invalid key type: publishable key provided instead of restricted key')
+    // For restricted keys, we can use them directly - they work like secret keys for server-side operations
+    if (!stripeSecretKey.startsWith('rk_') && !stripeSecretKey.startsWith('sk_')) {
+      console.error('Invalid key format: must be restricted key (rk_) or secret key (sk_)')
       return new Response(
-        JSON.stringify({ error: 'Payment service configuration error - publishable key used instead of restricted key' }),
+        JSON.stringify({ error: 'Payment service configuration error - invalid key format' }),
         { 
           status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -50,11 +50,11 @@ serve(async (req) => {
       )
     }
 
-    // Ensure we have a restricted key (rk_)
-    if (!stripeSecretKey.startsWith('rk_')) {
-      console.error('Invalid key format: must be restricted key (rk_)')
+    // Reject if someone accidentally provided a publishable key
+    if (stripeSecretKey.startsWith('pk_')) {
+      console.error('Invalid key type: publishable key provided instead of restricted/secret key')
       return new Response(
-        JSON.stringify({ error: 'Payment service configuration error - must use restricted key format' }),
+        JSON.stringify({ error: 'Payment service configuration error - publishable key used instead of restricted key' }),
         { 
           status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
