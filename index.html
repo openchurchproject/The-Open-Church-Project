@@ -225,8 +225,7 @@
                         <span class="gradient-text">Anytime</span>
                     </h1>
                     <p class="text-xl md:text-2xl mb-8 opacity-95">
-                        Find peace, prayer, and welcome in God&#39;s house — open 24 hours a day, 
-                        7 days a week. No matter what you&#39;re facing, these doors are always open.
+                        
                     </p>
                 </div>
             </div>
@@ -239,7 +238,7 @@
                         Open Churches Near You
                     </h2>
                     <div id="find-church-description" class="text-lg text-gray-600">
-                        <p>Find churches that keep their doors open 24/7</p>
+                        <p>Find churches that keep their doors open 24/7 Gate City Church-1446 Calvin Davis Cir, Lawrenceville, GA 30043</p>
                     </div>
                 </div>
 
@@ -643,12 +642,11 @@
                         Get Involved
                     </h2>
                     <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                        Whether you&#39;re a church leader, volunteer, or supporter, 
-                        there are many ways to join this movement of hope.
+                        Coming Soon!
                     </p>
                 </div>
                 
-                <div class="grid md:grid-cols-3 gap-8">
+                <div>
                     <!-- Volunteer -->
                     <div class="text-center fade-in">
                         <div class="w-20 h-20 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -964,7 +962,7 @@
         </div>
     </div>
     
-        <!-- Donate Modal -->
+    <!-- Donate Modal -->
     <div id="donate-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
         <div class="bg-white rounded-2xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
@@ -1047,7 +1045,7 @@
         
         async function initializeStripe() {
             try {
-                // Use fallback key for initialization
+                // Use test key for initialization
                 stripe = Stripe('pk_test_51QdDyoH7U4yNOuujeLBqpAOOdpAhO71oXssTqsXGGKPQ4XkC87VqTqnCKC1ZzJz6ijqOXNNOa64p6VkImc0WoELH00ElPfGxhI');
                 
                 // Create Elements instance
@@ -1066,6 +1064,8 @@
                         },
                     },
                 });
+                
+                console.log('Stripe initialized successfully');
                 
             } catch (error) {
                 console.error('Error initializing Stripe:', error);
@@ -1463,6 +1463,8 @@
                 const amount = parseFloat(formData.get('amount'));
                 const donorEmail = formData.get('donor_email');
                 
+                console.log('Starting donation process:', { amount, donorEmail });
+                
                 if (!amount || amount <= 0) {
                     throw new Error('Please enter a valid donation amount');
                 }
@@ -1470,6 +1472,8 @@
                 if (amount < 1) {
                     throw new Error('Minimum donation amount is $1.00');
                 }
+                
+                console.log('Creating payment intent...');
                 
                 // Create payment intent through Supabase Edge Function
                 const { data: paymentData, error: paymentError } = await supabase.functions.invoke('process-payment', {
@@ -1486,8 +1490,11 @@
                 }
 
                 if (!paymentData.client_secret) {
+                    console.error('Invalid payment response:', paymentData);
                     throw new Error('Invalid payment response from server');
                 }
+                
+                console.log('Payment intent created, confirming with Stripe...');
                 
                 // Confirm payment with Stripe
                 const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(paymentData.client_secret, {
@@ -1504,6 +1511,8 @@
                     throw new Error(stripeError.message);
                 }
                 
+                console.log('Payment confirmed:', paymentIntent);
+                
                 if (paymentIntent.status === 'succeeded') {
                     // Log successful donation in database
                     const donationData = {
@@ -1512,6 +1521,8 @@
                         donation_type: 'one-time',
                         status: 'completed'
                     };
+                    
+                    console.log('Logging donation to database...');
                     
                     const { error } = await supabase
                         .from('donations')
@@ -1532,6 +1543,7 @@
                         console.warn('Email notification failed:', emailError);
                     }
                     
+                    console.log('Donation successful! Payment ID:', paymentIntent.id);
                     showSuccess('donation-success');
                     form.reset();
                     cardElement.clear();
@@ -1541,6 +1553,7 @@
                     });
                     setTimeout(() => closeModal('donate-modal'), 3000);
                 } else {
+                    console.error('Payment not completed:', paymentIntent.status);
                     throw new Error('Payment was not completed successfully');
                 }
                 
@@ -1578,4 +1591,5 @@
 
 <script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script>
 
-</body></html>
+<script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script></body>
+</html>
