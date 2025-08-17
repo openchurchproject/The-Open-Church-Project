@@ -21,10 +21,10 @@ serve(async (req) => {
   try {
     const { amount, currency, donor_email }: PaymentRequest = await req.json()
 
-    // Get Stripe keys from environment
-    const stripeSecretKey = Deno.env.get('STRIPE_RESTRICTED_KEY')
+        // Get Stripe keys from environment - try secret key first, then restricted key
+    const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY') || Deno.env.get('STRIPE_RESTRICTED_KEY')
     if (!stripeSecretKey) {
-      console.error('STRIPE_RESTRICTED_KEY not found in environment variables')
+      console.error('STRIPE_SECRET_KEY not found in environment variables')
       return new Response(
         JSON.stringify({ error: 'Payment service configuration error' }),
         { 
