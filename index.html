@@ -1006,7 +1006,7 @@
                 </div>
                 
                 <div class="mb-6">
-                    <input type="number" id="custom-amount" name="amount" placeholder="Enter custom amount" min="1" step="0.01" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"/>
+                    <input type="number" id="custom-amount" name="amount" placeholder="Enter custom amount (min $0.50)" min="0.50" step="0.01" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"/>
                 </div>
                 
                 <div class="mb-6">
@@ -1198,7 +1198,7 @@
             });
         }
         
-        // Donation amount selection
+                // Donation amount selection
         function selectAmount(amount) {
             document.getElementById('custom-amount').value = amount;
             
@@ -1460,17 +1460,19 @@
             
             try {
                 const formData = new FormData(form);
-                const amount = parseFloat(formData.get('amount'));
+                let amount = parseFloat(formData.get('amount'));
                 const donorEmail = formData.get('donor_email');
                 
                 console.log('Starting donation process:', { amount, donorEmail });
                 
-                if (!amount || amount <= 0) {
-                    throw new Error('Please enter a valid donation amount');
+                // Validate amount - accept any positive number including decimals
+                if (!amount || isNaN(amount) || amount <= 0) {
+                    throw new Error('Please enter a valid donation amount (minimum $0.50)');
                 }
 
-                if (amount < 1) {
-                    throw new Error('Minimum donation amount is $1.00');
+                // Stripe minimum is $0.50
+                if (amount < 0.50) {
+                    throw new Error('Minimum donation amount is $0.50');
                 }
                 
                 console.log('Creating payment intent...');
@@ -1545,12 +1547,22 @@
                     
                     console.log('Donation successful! Payment ID:', paymentIntent.id);
                     showSuccess('donation-success');
+                    
+                    // Clear the form and credit card information
                     form.reset();
-                    cardElement.clear();
+                    if (cardElement) {
+                        cardElement.clear();
+                    }
+                    
+                    // Reset amount button styles
                     document.querySelectorAll('.amount-btn').forEach(btn => {
                         btn.classList.remove('bg-gold-600', 'text-white');
                         btn.classList.add('text-gold-600');
                     });
+                    
+                    // Clear any card errors
+                    document.getElementById('card-errors').textContent = '';
+                    
                     setTimeout(() => closeModal('donate-modal'), 3000);
                 } else {
                     console.error('Payment not completed:', paymentIntent.status);
