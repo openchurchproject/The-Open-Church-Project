@@ -21,12 +21,24 @@ serve(async (req) => {
   try {
     const { amount, currency, donor_email }: PaymentRequest = await req.json()
 
-        // Get Stripe keys from environment - try secret key first, then restricted key
-    const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY') || Deno.env.get('STRIPE_RESTRICTED_KEY')
+    // Get Stripe secret key from environment
+    const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY')
     if (!stripeSecretKey) {
       console.error('STRIPE_SECRET_KEY not found in environment variables')
       return new Response(
         JSON.stringify({ error: 'Payment service configuration error' }),
+        { 
+          status: 500, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      )
+    }
+
+    // Ensure we're using the secret key, not publishable key
+    if (stripeSecretKey.startsWith('pk_')) {
+      console.error('Invalid key type: publishable key provided instead of secret key')
+      return new Response(
+        JSON.stringify({ error: 'Payment service configuration error - invalid key type' }),
         { 
           status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
