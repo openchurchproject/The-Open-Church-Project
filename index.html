@@ -1004,7 +1004,7 @@
             </div>
             
             <div class="grid grid-cols-2 gap-3">
-                <button type="button" onclick="redirectToStripe25()" class="amount-btn p-4 border-2 border-gold-600 text-gold-600 rounded-lg hover:bg-gold-50 transition-colors">
+                                <button type="button" onclick="redirectToStripe25()" class="amount-btn p-4 border-2 border-gold-600 text-gold-600 rounded-lg hover:bg-gold-50 transition-colors">
                     <div class="text-2xl font-bold">$25</div>
                     <div class="text-xs">Basic Support</div>
                 </button>
@@ -1046,14 +1046,14 @@
                             color: '#374151',
                             fontFamily: 'Inter, sans-serif',
                             '::placeholder': {
-                                color: '#9CA3AF',
-                            },
+                                color: '#9CA3AF'
+                            }
                         },
                         invalid: {
                             color: '#fa755a',
                             iconColor: '#fa755a'
                         }
-                    },
+                    }
                 });
                 console.log('Stripe initialized successfully');
             } catch (error) {
