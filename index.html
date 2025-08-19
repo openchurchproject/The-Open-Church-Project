@@ -1081,22 +1081,14 @@
                 <p class="text-gray-600 text-sm">Help churches stay open safely with security systems, basic amenities, and support resources.</p>
             </div>
             
-            <div class="grid grid-cols-2 gap-3">
+                        <div class="grid grid-cols-2 gap-3">
                 <button type="button" onclick="redirectToStripe25()" class="amount-btn p-4 border-2 border-gold-600 text-gold-600 rounded-lg hover:bg-gold-50 transition-colors">
                     <div class="text-2xl font-bold">$25</div>
                     <div class="text-xs">Basic Support</div>
                 </button>
-                <button type="button" class="amount-btn p-4 border-2 border-gold-600 text-gold-600 rounded-lg hover:bg-gold-50 transition-colors">
-                    <div class="text-2xl font-bold">$50</div>
-                    <div class="text-xs">Monthly Supporter</div>
-                </button>
-                <button type="button" class="amount-btn p-4 border-2 border-gold-600 text-gold-600 rounded-lg hover:bg-gold-50 transition-colors">
+                <button type="button" onclick="redirectToStripe100()" class="amount-btn p-4 border-2 border-gold-600 text-gold-600 rounded-lg hover:bg-gold-50 transition-colors">
                     <div class="text-2xl font-bold">$100</div>
                     <div class="text-xs">Security Fund</div>
-                </button>
-                <button type="button" class="amount-btn p-4 border-2 border-gold-600 text-gold-600 rounded-lg hover:bg-gold-50 transition-colors">
-                    <div class="text-2xl font-bold">$250</div>
-                    <div class="text-xs">Church Sponsor</div>
                 </button>
             </div>
             
@@ -1324,6 +1316,11 @@
         // Redirect to Stripe for $25 donation
         function redirectToStripe25() {
             window.open('https://buy.stripe.com/fZu28sbVLdUQ4TEdbF7AI01', '_blank');
+        }
+        
+        // Redirect to Stripe for $100 donation
+        function redirectToStripe100() {
+            window.open('https://buy.stripe.com/dRm9AU2lb2c84TE9Zt7AI02', '_blank');
         }
         
         // Form submission handlers
