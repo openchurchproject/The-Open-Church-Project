@@ -9,7 +9,7 @@
     <meta property="og:url" content="https://www.theopenchurchproject.org"/>
     <meta property="og:type" content="website"/>
     <meta property="og:site_name" content="The Open Church Project"/>
-    <meta property="og:image" content="https://cdn-ai.onspace.ai/onspace/project/image/VFsfhcATpsaemovcwtxQfc/youtube_logo_with_margins.png"/>
+    <meta property="og:image" content="https://cdn-ai.onspace.ai/onspace/project/image/bPZxcY6oVmrPUW5xrWoMHJ/youtube_logo_with_margins.png"/>
     <meta property="og:image:width" content="1200"/>
     <meta property="og:image:height" content="630"/>
     
@@ -17,7 +17,7 @@
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:title" content="The Open Church Project - God's Doors Should Never Be Closed"/>
     <meta name="twitter:description" content="24-Hour Ministries are needed in every community!"/>
-    <meta name="twitter:image" content="https://cdn-ai.onspace.ai/onspace/project/image/VFsfhcATpsaemovcwtxQfc/youtube_logo_with_margins.png"/>
+    <meta name="twitter:image" content="https://cdn-ai.onspace.ai/onspace/project/image/bPZxcY6oVmrPUW5xrWoMHJ/youtube_logo_with_margins.png"/>
     <meta name="twitter:url" content="https://www.theopenchurchproject.org"/>
     
     <!-- Google Fonts -->
@@ -33,9 +33,6 @@
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Stripe.js -->
-    <script src="https://js.stripe.com/v3/"></script>
     
     <script>
         tailwind.config = {
@@ -137,7 +134,7 @@
             display: none;
         }
 
-        .find-church-page {
+        .find-church-page, .blog-page {
             position: fixed;
             top: 0;
             left: 0;
@@ -154,40 +151,35 @@
                         url('https://cdn-ai.onspace.ai/onspace/project/image/CoVag7NRWqru5d5LcyYWMF/ChatGPT_Image_Aug_16,_2025,_09_41_41_PM.png') center/cover;
         }
 
+        .blog-bg {
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.7), rgba(234, 179, 8, 0.6)), 
+                        url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920&h=1080&fit=crop') center/cover;
+        }
+
         .donate-modal .bg-white {
             max-height: 90vh;
             overflow-y: auto;
         }
 
-        #card-element {
-            padding: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            background: white;
+        .blog-post {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 2rem 0;
         }
 
-        .StripeElement {
-            box-sizing: border-box;
-            height: 40px;
-            padding: 10px 12px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            background-color: white;
-            box-shadow: 0 1px 3px 0 #e6ebf1;
-            -webkit-transition: box-shadow 150ms ease;
-            transition: box-shadow 150ms ease;
+        .blog-post:last-child {
+            border-bottom: none;
         }
 
-        .StripeElement--focus {
-            box-shadow: 0 1px 3px 0 #cfd7df;
+        .admin-panel {
+            background: #f9fafb;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
         }
 
-        .StripeElement--invalid {
-            border-color: #fa755a;
-        }
-
-        .StripeElement--webkit-autofill {
-            background-color: #fefde2 !important;
+        .blog-content {
+            white-space: pre-wrap;
+            line-height: 1.7;
         }
     </style>
 </head>
@@ -198,7 +190,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-3">
-                    <img src="https://cdn-ai.onspace.ai/onspace/project/image/c3JBEceqPqoUZoup7VFnrR/youtube_logo_with_margins.png" alt="The Open Church Project Logo" class="w-8 h-8"/>
+                    <img src="https://cdn-ai.onspace.ai/onspace/project/image/Pxm5xqrPva3ZmPxxtdXAhz/youtube_logo_with_margins.png" alt="The Open Church Project Logo" class="w-8 h-8"/>
                     <span class="text-xl font-serif font-semibold text-deep-blue-900">The Open Church Project</span>
                 </div>
                 
@@ -206,6 +198,7 @@
                     <a href="#mission" class="text-gray-700 hover:text-gold-600 transition-colors">Mission</a>
                     <a href="#why-247" class="text-gray-700 hover:text-gold-600 transition-colors">Why 24/7</a>
                     <a href="#join" class="text-gray-700 hover:text-gold-600 transition-colors">Join Network</a>
+                    <button onclick="openBlog()" class="text-gray-700 hover:text-gold-600 transition-colors">Blog</button>
                     <button onclick="openFindChurch()" class="bg-deep-blue-600 text-white px-4 py-2 rounded-full hover:bg-deep-blue-700 transition-colors">
                         Find a 24 Hour Church
                     </button>
@@ -226,6 +219,7 @@
                 <a href="#mission" class="block text-gray-700 hover:text-gold-600 transition-colors">Mission</a>
                 <a href="#why-247" class="block text-gray-700 hover:text-gold-600 transition-colors">Why 24/7</a>
                 <a href="#join" class="block text-gray-700 hover:text-gold-600 transition-colors">Join Network</a>
+                <button onclick="openBlog()" class="block w-full text-left text-gray-700 hover:text-gold-600 transition-colors">Blog</button>
                 <button onclick="openFindChurch()" class="w-full text-left bg-deep-blue-600 text-white px-6 py-2 rounded-full hover:bg-deep-blue-700 transition-colors mb-2">
                     Find a 24 Hour Church
                 </button>
@@ -236,13 +230,98 @@
         </div>
     </nav>
 
+    <!-- Blog Page -->
+    <div id="blog-page" class="blog-page">
+        <nav class="bg-white/95 backdrop-blur-sm border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center space-x-3">
+                        <img src="https://cdn-ai.onspace.ai/onspace/project/image/Pxm5xqrPva3ZmPxxtdXAhz/youtube_logo_with_margins.png" alt="The Open Church Project Logo" class="w-8 h-8"/>
+                        <span class="text-xl font-serif font-semibold text-deep-blue-900">Open Church Blog</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="showBlogAdmin()" class="text-sm text-gray-600 hover:text-gold-600 transition-colors">Admin</button>
+                        <button onclick="closeBlog()" class="text-gray-700 hover:text-gold-600 transition-colors">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="blog-bg min-h-[40vh]">
+            <div class="flex items-center justify-center min-h-[40vh] text-white relative">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h1 class="text-4xl md:text-6xl font-serif font-bold mb-6 leading-tight">
+                        Open Church
+                        <span class="gradient-text">Blog</span>
+                    </h1>
+                    <p class="text-xl text-blue-100 mb-8">Updates, stories, and insights from the movement</p>
+                </div>
+            </div>
+        </div>
+
+        <section class="py-16 bg-white">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Admin Panel -->
+                <div id="blog-admin-panel" class="admin-panel hidden">
+                    <div id="admin-login" class="text-center">
+                        <h3 class="text-xl font-semibold text-deep-blue-900 mb-4">Admin Access</h3>
+                        <div class="max-w-sm mx-auto">
+                            <input type="password" id="admin-password" placeholder="Enter admin password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent mb-4"/>
+                            <button onclick="loginAdmin()" class="w-full bg-gold-600 text-white py-3 rounded-lg font-semibold hover:bg-gold-700 transition-colors">
+                                Login
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="admin-panel" class="hidden">
+                        <h3 class="text-xl font-semibold text-deep-blue-900 mb-4">Create New Blog Post</h3>
+                        
+                        <div id="blog-post-success" class="success-message">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            Blog post published successfully!
+                        </div>
+                        <div id="blog-post-error" class="error-message">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            There was an error publishing your post. Please try again.
+                        </div>
+                        
+                        <form id="blog-post-form" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+                                <input type="text" name="title" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"/>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Content *</label>
+                                <textarea name="content" required rows="10" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent resize-none"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="bg-gold-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gold-700 transition-colors">
+                                Publish Post
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Blog Posts -->
+                <div id="blog-posts">
+                    <div class="text-center py-8">
+                        <p class="text-gray-600">Loading blog posts...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
     <!-- Find Church Page -->
     <div id="find-church-page" class="find-church-page">
         <nav class="bg-white/95 backdrop-blur-sm border-b border-gray-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center py-4">
                     <div class="flex items-center space-x-3">
-                        <img src="https://cdn-ai.onspace.ai/onspace/project/image/c3JBEceqPqoUZoup7VFnrR/youtube_logo_with_margins.png" alt="The Open Church Project Logo" class="w-8 h-8"/>
+                        <img src="https://cdn-ai.onspace.ai/onspace/project/image/Pxm5xqrPva3ZmPxxtdXAhz/youtube_logo_with_margins.png" alt="The Open Church Project Logo" class="w-8 h-8"/>
                         <span class="text-xl font-serif font-semibold text-deep-blue-900">Find a 24 Hour Church</span>
                     </div>
                     <button onclick="closeFindChurch()" class="text-gray-700 hover:text-gold-600 transition-colors">
@@ -824,7 +903,7 @@
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
                     <div class="flex items-center justify-center space-x-3 mb-6">
-                        <img src="https://cdn-ai.onspace.ai/onspace/project/image/c3JBEceqPqoUZoup7VFnrR/youtube_logo_with_margins.png" alt="The Open Church Project Logo" class="w-8 h-8"/>
+                        <img src="https://cdn-ai.onspace.ai/onspace/project/image/Pxm5xqrPva3ZmPxxtdXAhz/youtube_logo_with_margins.png" alt="The Open Church Project Logo" class="w-8 h-8"/>
                         <span class="text-xl font-serif font-semibold">The Open Church Project</span>
                     </div>
                     <p class="text-blue-100 leading-relaxed mb-8 max-w-2xl mx-auto">
@@ -1031,34 +1110,9 @@
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhrcGNpenVwcGJ0cWFidXhmemRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4ODU2ODQsImV4cCI6MjA3MDQ2MTY4NH0.ayeWLI7oRhMQAq21aSi0FmeZLePNT3Du03JoxbJZb9k';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
         
-        // Initialize Stripe
-        let stripe, elements, cardElement;
-        
-        async function initializeStripe() {
-            try {
-                stripe = Stripe('pk_live_51QdDyoH7U4yNOuujwCjz4nfBbdngHOW4Axv1bF9hGe5hiRCKWQPIKWQE82Pl3uZiNI3VBQJ6eiQL4uT7C4NHQhqg00j1Itqnd0');
-                elements = stripe.elements();
-                cardElement = elements.create('card', {
-                    style: {
-                        base: {
-                            fontSize: '16px',
-                            color: '#374151',
-                            fontFamily: 'Inter, sans-serif',
-                            '::placeholder': {
-                                color: '#9CA3AF'
-                            }
-                        },
-                        invalid: {
-                            color: '#fa755a',
-                            iconColor: '#fa755a'
-                        }
-                    }
-                });
-                console.log('Stripe initialized successfully');
-            } catch (error) {
-                console.error('Error initializing Stripe:', error);
-            }
-        }
+        // Blog functionality
+        let isAdminLoggedIn = false;
+        const ADMIN_PASSWORD = 'openchurch2025';
         
         // Utility functions
         function showSuccess(elementId) {
@@ -1107,6 +1161,106 @@
         function closeFindChurch() {
             document.getElementById('find-church-page').style.display = 'none';
             document.body.style.overflow = 'auto';
+        }
+
+        // Blog Page functions
+        function openBlog() {
+            document.getElementById('blog-page').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            loadBlogPosts();
+        }
+
+        function closeBlog() {
+            document.getElementById('blog-page').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function showBlogAdmin() {
+            const adminPanel = document.getElementById('blog-admin-panel');
+            adminPanel.classList.remove('hidden');
+            if (isAdminLoggedIn) {
+                document.getElementById('admin-login').style.display = 'none';
+                document.getElementById('admin-panel').classList.remove('hidden');
+            }
+        }
+
+        function loginAdmin() {
+            const password = document.getElementById('admin-password').value;
+            if (password === ADMIN_PASSWORD) {
+                isAdminLoggedIn = true;
+                document.getElementById('admin-login').style.display = 'none';
+                document.getElementById('admin-panel').classList.remove('hidden');
+            } else {
+                alert('Incorrect password');
+            }
+        }
+
+        async function loadBlogPosts() {
+            try {
+                const { data: posts, error } = await supabase
+                    .from('blog_posts')
+                    .select('*')
+                    .eq('status', 'published')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const postsContainer = document.getElementById('blog-posts');
+                
+                if (posts && posts.length > 0) {
+                    postsContainer.innerHTML = posts.map(post => {
+                        const date = new Date(post.created_at).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                        
+                        const shareUrl = `${window.location.origin}${window.location.pathname}?post=${post.id}`;
+                        
+                        return `
+                            <article class="blog-post">
+                                <header class="mb-4">
+                                    <h2 class="text-2xl md:text-3xl font-serif font-bold text-deep-blue-900 mb-2">${post.title}</h2>
+                                    <div class="flex items-center justify-between text-sm text-gray-600">
+                                        <time datetime="${post.created_at}">${date}</time>
+                                        <button onclick="shareBlogPost('${post.title}', '${shareUrl}')" class="text-gold-600 hover:text-gold-700 transition-colors">
+                                            <i class="fas fa-share mr-1"></i> Share
+                                        </button>
+                                    </div>
+                                </header>
+                                <div class="blog-content text-gray-700 leading-relaxed">${post.content}</div>
+                            </article>
+                        `;
+                    }).join('');
+                } else {
+                    postsContainer.innerHTML = `
+                        <div class="text-center py-12">
+                            <i class="fas fa-newspaper text-4xl text-gray-300 mb-4"></i>
+                            <p class="text-gray-600">No blog posts yet. Check back soon for updates!</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                document.getElementById('blog-posts').innerHTML = `
+                    <div class="text-center py-12">
+                        <p class="text-red-600">Error loading blog posts. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function shareBlogPost(title, url) {
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    url: url
+                });
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Blog post link copied to clipboard!');
+                });
+            }
         }
         
         // Modal functions
@@ -1404,11 +1558,48 @@
                 setFormLoading(form, false);
             }
         });
+
+        // Blog post form submission
+        document.getElementById('blog-post-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            setFormLoading(form, true);
+            
+            try {
+                const formData = new FormData(form);
+                const blogData = {
+                    title: formData.get('title'),
+                    content: formData.get('content'),
+                    status: 'published'
+                };
+                
+                const { error } = await supabase
+                    .from('blog_posts')
+                    .insert(blogData);
+                
+                if (error) throw error;
+                
+                showSuccess('blog-post-success');
+                form.reset();
+                loadBlogPosts(); // Reload posts to show the new one
+            } catch (error) {
+                console.error('Error submitting blog post:', error);
+                showError('blog-post-error');
+            } finally {
+                setFormLoading(form, false);
+            }
+        });
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             handleScrollAnimations();
-            initializeStripe();
+            
+            // Check if there's a specific blog post to show in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('post');
+            if (postId) {
+                openBlog();
+            }
         });
         
         // Smooth scroll for anchor links
